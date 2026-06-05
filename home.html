@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOOK NOW - 3D Carousel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #0a0a0a;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+                linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #e0e0e0;
+        }
+
+        .header {
+            text-align: center;
+            padding: 30px 20px 25px;
+            background: rgba(20, 20, 20, 0.9);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            border-bottom: 2px solid #333;
+            position: relative;
+            z-index: 10;
+        }
+
+        .website-name {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #d4af37;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
+            letter-spacing: 4px;
+            margin-bottom: 12px;
+            font-family: 'Georgia', serif;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #b8b8b8;
+            margin-bottom: 25px;
+            font-style: italic;
+            font-family: 'Georgia', serif;
+        }
+
+        .options-container {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            padding: 0 20px;
+            flex-wrap: wrap;
+        }
+
+        .option-button {
+            background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
+            color: #d4af37;
+            border: 2px solid #d4af37;
+            padding: 14px 28px;
+            font-size: 1.05rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 
+                0 4px 15px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-width: 140px;
+            font-family: 'Georgia', serif;
+        }
+
+        .option-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.4),
+                0 0 20px rgba(212, 175, 55, 0.3);
+            background: linear-gradient(145deg, #d4af37, #b8941f);
+            color: #1a1a1a;
+            border-color: #d4af37;
+        }
+
+        .option-button.vehicle {
+            border-color: #8b7355;
+            color: #8b7355;
+        }
+
+        .option-button.vehicle:hover {
+            background: linear-gradient(145deg, #8b7355, #6d5a44);
+            color: #1a1a1a;
+            border-color: #8b7355;
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.4),
+                0 0 20px rgba(139, 115, 85, 0.3);
+        }
+
+        .option-button.tourism {
+            border-color: #5a6b4d;
+            color: #5a6b4d;
+        }
+
+        .option-button.tourism:hover {
+            background: linear-gradient(145deg, #5a6b4d, #4a5a3d);
+            color: #1a1a1a;
+            border-color: #5a6b4d;
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.4),
+                0 0 20px rgba(90, 107, 77, 0.3);
+        }
+
+        /* 3D Carousel Container - Full Screen */
+        .carousel-wrapper {
+            position: relative;
+            width: 100vw;
+            height: calc(100vh - 210px);
+            perspective: 1500px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: calc(-50vw + 50%);
+        }
+
+        .carousel-3d {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+        }
+
+        .carousel-item-3d {
+            position: absolute;
+            width: 800px;
+            height: 550px;
+            left: 50%;
+            top: 50%;
+            margin-left: -400px;
+            margin-top: -275px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 
+                0 30px 90px rgba(0, 0, 0, 0.8),
+                0 0 0 1px rgba(212, 175, 55, 0.3);
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            background: #1a1a1a;
+        }
+
+        .carousel-item-3d img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .carousel-item-3d:hover img {
+            transform: scale(1.08);
+        }
+
+        .carousel-item-3d .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.7) 50%, transparent 100%);
+            color: #d4af37;
+            padding: 45px 35px;
+            text-align: center;
+            font-weight: bold;
+            font-family: 'Georgia', serif;
+            font-size: 2rem;
+            letter-spacing: 2px;
+            transition: all 0.5s ease;
+        }
+
+        .carousel-item-3d .category-tag {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            background: rgba(212, 175, 55, 0.95);
+            color: #1a1a1a;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 1.05rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .category-tag.vehicle {
+            background: rgba(139, 115, 85, 0.95);
+            color: #fff;
+        }
+
+        .category-tag.tourism {
+            background: rgba(90, 107, 77, 0.95);
+            color: #fff;
+        }
+
+        /* Indicators */
+        .indicators {
+            position: absolute;
+            bottom: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+        }
+
+        .indicator {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: rgba(212, 175, 55, 0.3);
+            border: 2px solid rgba(212, 175, 55, 0.5);
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .indicator.active {
+            background: #d4af37;
+            border-color: #d4af37;
+            transform: scale(1.5);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.7);
+        }
+
+        .indicator:hover {
+            background: rgba(212, 175, 55, 0.6);
+            transform: scale(1.3);
+        }
+
+        @media (max-width: 1400px) {
+            .carousel-item-3d {
+                width: 700px;
+                height: 480px;
+                margin-left: -350px;
+                margin-top: -240px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .carousel-item-3d {
+                width: 600px;
+                height: 420px;
+                margin-left: -300px;
+                margin-top: -210px;
+            }
+
+            .carousel-item-3d .overlay {
+                font-size: 1.7rem;
+                padding: 35px 30px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .carousel-item-3d {
+                width: 500px;
+                height: 360px;
+                margin-left: -250px;
+                margin-top: -180px;
+            }
+
+            .carousel-item-3d .overlay {
+                font-size: 1.4rem;
+                padding: 30px 25px;
+            }
+
+            .carousel-item-3d .category-tag {
+                font-size: 0.95rem;
+                padding: 10px 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .website-name {
+                font-size: 2.5rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .carousel-wrapper {
+                height: calc(100vh - 240px);
+            }
+
+            .carousel-item-3d {
+                width: 85vw;
+                max-width: 420px;
+                height: 320px;
+                margin-left: -42.5vw;
+                margin-top: -160px;
+            }
+
+            .carousel-item-3d .overlay {
+                font-size: 1.2rem;
+                padding: 25px 20px;
+            }
+
+            .carousel-item-3d .category-tag {
+                font-size: 0.85rem;
+                padding: 8px 16px;
+                top: 15px;
+                right: 15px;
+            }
+
+            .indicators {
+                bottom: 20px;
+                gap: 10px;
+            }
+
+            .indicator {
+                width: 12px;
+                height: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .website-name {
+                font-size: 2rem;
+                letter-spacing: 2px;
+            }
+
+            .carousel-item-3d {
+                height: 280px;
+                margin-top: -140px;
+            }
+
+            .carousel-item-3d .overlay {
+                font-size: 1rem;
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="website-name">BOOK NOW</h1>
+        <p class="subtitle">Choose Your Perfect Experience</p>
+        
+        <div class="options-container">
+            <button class="option-button hotel" onclick="goToPage('hotel')">HOTEL</button>
+            <button class="option-button vehicle" onclick="goToPage('vehicle')">VEHICLE</button>
+            <button class="option-button tourism" onclick="goToPage('tourism')">TOURISM PLACE</button>
+        </div>
+    </div>
+
+    <div class="carousel-wrapper">
+        <div class="indicators" id="indicators"></div>
+        
+        <div class="carousel-3d" id="carousel3d">
+            <!-- Items will be dynamically generated -->
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script>
+        firebase.initializeApp({
+            apiKey: "AIzaSyBzlUz79MvbV98osbMniaddt3nltmtQyaM",
+            authDomain: "book-now-935f2.firebaseapp.com",
+            projectId: "book-now-935f2",
+            storageBucket: "book-now-935f2.firebasestorage.app",
+            messagingSenderId: "61818097207",
+            appId: "1:61818097207:web:aade934f0fb93b975c79b2"
+        });
+
+        const auth = firebase.auth();
+
+        firebase.auth().onAuthStateChanged((user) => {
+          const container = document.querySelector('.options-container');
+          const userName = localStorage.getItem('userName') || (user ? user.email : null);
+          
+          if (!user) {
+            container.innerHTML = '';
+            const loginLink = document.createElement('button');
+            loginLink.className = 'option-button hotel';
+            loginLink.textContent = 'LOGIN';
+            loginLink.onclick = () => window.location.href = 'login.html';
+            container.appendChild(loginLink);
+          } else {
+            const role = localStorage.getItem('userRole') || 'user';
+            const roleLabel = role.charAt(0).toUpperCase() + role.slice(1);
+            container.innerHTML = `
+              <span style="color:#d4af37; font-size:0.9rem; margin-right:15px;">👤 ${userName} (${roleLabel})</span>
+              <button class="option-button hotel" onclick="navigateTo('uhotel')">🏨 HOTELS</button>
+              <button class="option-button vehicle" onclick="navigateTo('ucar')">🚗 VEHICLES</button>
+              <button class="option-button tourism" onclick="navigateTo('utourism')">🏛️ TOURISM</button>
+              <button class="option-button" style="border-color: #ff6b6b; color: #ff6b6b;" onclick="logout()">🚪 LOGOUT</button>
+            `;
+          }
+        });
+
+        function navigateTo(page) {
+          switch(page) {
+            case 'uhotel': window.location.href = 'uhotel.html'; break;
+            case 'ucar': window.location.href = 'ucar.html'; break;
+            case 'utourism': window.location.href = 'utourism.html'; break;
+          }
+        }
+
+        function logout() {
+          if (confirm('Are you sure you want to logout?')) {
+            firebase.auth().signOut().then(() => {
+              window.location.href = 'login.html';
+            });
+          }
+        }
+
+        // All carousel items data
+        const carouselData = [
+            // Hotels
+            { img: 'http://www.miricitysharing.com/wp-content/uploads/2012/08/Grand-Palace-Hotel-Miri-City.jpg', title: 'Grand Palace Hotel', category: 'hotel' },
+            { img: 'https://luxurylifestyleawards.com/wp-content/uploads/2024/09/17-4.jpg', title: 'Ocean View Resort', category: 'hotel' },
+            { img: 'https://assets.simpleviewinc.com/simpleview/image/upload/c_limit,h_1200,q_75,w_1200/v1/crm/virginia/PUB-1500_22F894A2-F5F5-4423-8BE8BDCD31AB17F1_6406bcc4-7778-42b4-af44579f1cea229c.jpg', title: 'Mountain Lodge', category: 'hotel' },
+            { img: 'http://www.cfmedia.vfmleonardo.com/imageRepo/7/0/114/660/77/blrwf-exterior-7333-hor-clsc_O.jpg', title: 'City Center Hotel', category: 'hotel' },
+            { img: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1200&h=800&fit=crop', title: 'Boutique Inn', category: 'hotel' },
+            { img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1200&h=800&fit=crop', title: 'Beachfront Resort', category: 'hotel' },
+            
+            // Vehicles
+            { img: 'https://www.motortrend.com/uploads/2024/03/20-2025-BMW-i5-eDrive40-front-view.jpg', title: 'Luxury Sedan', category: 'vehicle' },
+            { img: 'https://www.carscoops.com/wp-content/uploads/2023/09/MD_Prior-Design_BMW_G05_X5-1s.jpg', title: 'Premium SUV', category: 'vehicle' },
+            { img: 'https://wallpapercave.com/wp/wp11349358.jpg', title: 'Sports Car', category: 'vehicle' },
+            { img: 'https://dreamlinercoaches.com/wp-content/uploads/2025/07/Tour-Buses-for-Sale-What-to-Look-for-When-Buying-a-Tour-Bus.png', title: 'Bus', category: 'vehicle' },
+            { img: 'https://acnews.blob.core.windows.net/imggallery/1024x768/GAZ_27db2fd85ffb40bea2c29959f0153dec.webp', title: 'Family Van', category: 'vehicle' },
+            { img: 'http://www.delhibushire.com/uploads/15-seater-bus-on-hire-12%20Seater%20Tempoo.jpg', title: 'Mini Bus', category: 'vehicle' },
+            
+            // Tourism Places
+            { img: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=800&fit=crop', title: 'Mountain Paradise', category: 'tourism' },
+            { img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&h=800&fit=crop', title: 'Tropical Beach', category: 'tourism' },
+            { img: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=1200&h=800&fit=crop', title: 'Historic City', category: 'tourism' },
+            { img: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&h=800&fit=crop', title: 'Enchanted Forest', category: 'tourism' },
+            { img: 'https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=1200&h=800&fit=crop', title: 'Desert Adventure', category: 'tourism' },
+            { img: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1200&h=800&fit=crop', title: 'Serene Lake', category: 'tourism' }
+        ];
+
+        const carousel = document.getElementById('carousel3d');
+        const indicatorsContainer = document.getElementById('indicators');
+        
+        let currentIndex = 0;
+        let autoRotateInterval;
+
+        // Create carousel items
+        carouselData.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'carousel-item-3d';
+            div.innerHTML = `
+                <img src="${item.img}" alt="${item.title}">
+                <div class="category-tag ${item.category}">${item.category}</div>
+                <div class="overlay">${item.title}</div>
+            `;
+            carousel.appendChild(div);
+
+            // Create indicator
+            const indicator = document.createElement('div');
+            indicator.className = 'indicator';
+            if (index === 0) indicator.classList.add('active');
+            indicator.addEventListener('click', () => jumpToIndex(index));
+            indicatorsContainer.appendChild(indicator);
+        });
+
+        const items = document.querySelectorAll('.carousel-item-3d');
+        const indicators = document.querySelectorAll('.indicator');
+        const totalItems = items.length;
+
+        function updateCarousel() {
+            const angleStep = 360 / totalItems;
+            const radius = 850;
+
+            items.forEach((item, index) => {
+                const angle = angleStep * (index - currentIndex);
+                const theta = (angle * Math.PI) / 180;
+                
+                const x = Math.sin(theta) * radius;
+                const z = Math.cos(theta) * radius - radius;
+                
+                let scale = 0.5;
+                let opacity = 0.3;
+                let zIndex = 1;
+                let blur = 6;
+
+                if (index === currentIndex) {
+                    // Center item - MAIN FOCUS
+                    scale = 1;
+                    opacity = 1;
+                    zIndex = 100;
+                    blur = 0;
+                } else {
+                    // Check for adjacent items
+                    const adjacentIndex1 = (currentIndex + 1) % totalItems;
+                    const adjacentIndex2 = (currentIndex - 1 + totalItems) % totalItems;
+                    
+                    if (index === adjacentIndex1 || index === adjacentIndex2) {
+                        scale = 0.7;
+                        opacity = 0.55;
+                        zIndex = 50;
+                        blur = 3;
+                    }
+                }
+
+                item.style.transform = `
+                    translate3d(${x}px, 0, ${z}px)
+                    scale(${scale})
+                `;
+                item.style.opacity = opacity;
+                item.style.zIndex = zIndex;
+                item.style.filter = `blur(${blur}px)`;
+            });
+
+            // Update indicators
+            indicators.forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === currentIndex);
+            });
+        }
+
+        function rotateCarousel() {
+            currentIndex = (currentIndex + 1) % totalItems;
+            updateCarousel();
+        }
+
+        function jumpToIndex(index) {
+            currentIndex = index;
+            updateCarousel();
+            resetAutoRotate();
+        }
+
+        function startAutoRotate() {
+            autoRotateInterval = setInterval(rotateCarousel, 3500);
+        }
+
+        function resetAutoRotate() {
+            clearInterval(autoRotateInterval);
+            startAutoRotate();
+        }
+
+        function goToPage(category) {
+            const userRole = localStorage.getItem('userRole');
+            
+            if (!auth.currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            switch(category) {
+                case 'hotel':
+                    if (userRole === 'admin') window.location.href = 'ahotel.html';
+                    else if (userRole === 'business') window.location.href = 'bhotel.html';
+                    else window.location.href = 'uhotel.html';
+                    break;
+                case 'vehicle':
+                    if (userRole === 'admin') window.location.href = 'acar.html';
+                    else if (userRole === 'business') window.location.href = 'bcar.html';
+                    else window.location.href = 'ucar.html';
+                    break;
+                case 'tourism':
+                    if (userRole === 'admin') window.location.href = 'atourism.html';
+                    else if (userRole === 'business') window.location.href = 'btourism.html';
+                    else window.location.href = 'utourism.html';
+                    break;
+            }
+        }
+
+        // Touch/swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        carousel.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        carousel.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            if (touchStartX - touchEndX > swipeThreshold) {
+                rotateCarousel();
+                resetAutoRotate();
+            }
+            if (touchEndX - touchStartX > swipeThreshold) {
+                currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+                updateCarousel();
+                resetAutoRotate();
+            }
+        }
+
+        // Initialize
+        updateCarousel();
+        startAutoRotate();
+    </script>
+</body>
+</html>

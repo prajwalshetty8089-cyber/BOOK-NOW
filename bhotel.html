@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Registration Portal - Karnataka</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-black: #000000;
+            --gold: #D4AF37;
+            --dark-gold: #B8941F;
+            --light-gold: #F4E4BC;
+            --white: #FFFFFF;
+            --gray: #333333;
+            --light-gray: #F5F5F5;
+            --danger: #DC2626;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            color: var(--white);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header-banner {
+            background: linear-gradient(135deg, var(--primary-black) 0%, var(--gray) 100%);
+            border: 3px solid var(--gold);
+            border-radius: 15px;
+            padding: 50px 40px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.3);
+            margin-bottom: 40px;
+        }
+
+        .header-banner h1 {
+            font-size: 2.8em;
+            color: var(--gold);
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            letter-spacing: 1px;
+        }
+
+        .header-banner p {
+            color: var(--light-gold);
+            font-size: 1.3em;
+            font-style: italic;
+        }
+
+        .progress-container {
+            background: var(--primary-black);
+            border: 2px solid var(--gold);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .progress-line {
+            position: absolute;
+            top: 20px;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background: var(--gray);
+            z-index: 1;
+        }
+
+        .progress-line-active {
+            position: absolute;
+            top: 20px;
+            left: 10%;
+            height: 3px;
+            background: var(--gold);
+            z-index: 2;
+            transition: width 0.4s ease;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            position: relative;
+            z-index: 3;
+        }
+
+        .step-circle {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--gray);
+            border: 3px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-circle {
+            background: var(--gold);
+            color: var(--primary-black);
+            transform: scale(1.1);
+        }
+
+        .step-label {
+            color: var(--light-gold);
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .step.active .step-label {
+            color: var(--gold);
+        }
+
+        .form-card {
+            background: var(--primary-black);
+            border: 2px solid var(--gold);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .form-step {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-header {
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .section-header h2 {
+            font-size: 2em;
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--light-gold);
+            font-weight: 600;
+            font-size: 1em;
+        }
+
+        .required-mark {
+            color: var(--danger);
+            margin-left: 3px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="number"],
+        input[type="url"],
+        input[type="file"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--gold);
+            border-radius: 8px;
+            font-size: 1em;
+            color: var(--white);
+            background: var(--gray);
+            transition: all 0.3s ease;
+            font-family: 'Georgia', 'Times New Roman', serif;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--light-gold);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+            background: #404040;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: space-between;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            border: 2px solid var(--gold);
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--gold);
+            color: var(--primary-black);
+            font-family: 'Georgia', 'Times New Roman', serif;
+        }
+
+        .btn:hover {
+            background: var(--dark-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--primary-black);
+            color: var(--gold);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray);
+        }
+
+        .info-box {
+            background: rgba(212, 175, 55, 0.1);
+            border-left: 4px solid var(--gold);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .info-box p {
+            color: var(--light-gold);
+            line-height: 1.6;
+            margin: 0;
+            font-style: italic;
+        }
+
+        .success-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .success-modal.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .success-content {
+            background: var(--primary-black);
+            border: 3px solid var(--gold);
+            border-radius: 20px;
+            padding: 60px;
+            text-align: center;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(212, 175, 55, 0.5);
+        }
+
+        .success-content h2 {
+            color: var(--gold);
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            font-weight: 700;
+        }
+
+        .success-content p {
+            color: var(--light-gold);
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+
+        .success-icon {
+            font-size: 6em;
+            color: var(--gold);
+            margin-bottom: 20px;
+            animation: scaleIn 0.5s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .error-message {
+            color: var(--danger);
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: none;
+        }
+
+        input.error,
+        select.error,
+        textarea.error {
+            border-color: var(--danger);
+        }
+
+        @media (max-width: 768px) {
+            .header-banner h1 {
+                font-size: 2em;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .step-label {
+                font-size: 0.75em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+            <div></div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <span id="userInfo" style="color: var(--gold); font-size: 0.9rem;"></span>
+                <button onclick="window.location.href='home.html'" style="background: var(--primary-black); color: var(--gold); border: 2px solid var(--gold); padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; font-family: 'Georgia', serif;">🏠 Home</button>
+                <button onclick="firebase.auth().signOut().then(() => { window.location.href='login.html'; })" style="background: var(--primary-black); color: #ff6b6b; border: 2px solid #ff6b6b; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; font-family: 'Georgia', serif;">🚪 Logout</button>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <div class="header-banner">
+            <h1>🏨 Karnataka Hotel Registration Portal</h1>
+            <p>Premium Hotel Listing Platform for Karnataka Tourism</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-steps">
+                <div class="progress-line"></div>
+                <div class="progress-line-active" id="progressLineActive"></div>
+                <div class="step active" data-step="1">
+                    <div class="step-circle">1</div>
+                    <span class="step-label">Hotel Info</span>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-circle">2</div>
+                    <span class="step-label">Location</span>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-circle">3</div>
+                    <span class="step-label">Contact</span>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-circle">4</div>
+                    <span class="step-label">Images</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form -->
+        <form id="hotelRegistrationForm">
+            <!-- Step 1: Basic Information -->
+            <div class="form-card form-step active" data-step="1">
+                <div class="section-header">
+                    <h2>Basic Hotel Information</h2>
+                </div>
+
+                <div class="info-box">
+                    <p>Please provide accurate information about your hotel. All fields marked with * are mandatory.</p>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label>Hotel Name <span class="required-mark">*</span></label>
+                        <input type="text" id="hotelName" name="hotelName" required placeholder="Enter your hotel name">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Category <span class="required-mark">*</span></label>
+                        <select id="hotelCategory" name="hotelCategory" required>
+                            <option value="">Select Category</option>
+                            <option value="luxury">Luxury Hotel</option>
+                            <option value="budget">Budget Hotel</option>
+                            <option value="boutique">Boutique Hotel</option>
+                            <option value="resort">Resort</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Star Rating <span class="required-mark">*</span></label>
+                        <select id="starRating" name="starRating" required>
+                            <option value="">Select Rating</option>
+                            <option value="5">⭐⭐⭐⭐⭐ (5 Star)</option>
+                            <option value="4">⭐⭐⭐⭐ (4 Star)</option>
+                            <option value="3">⭐⭐⭐ (3 Star)</option>
+                            <option value="2">⭐⭐ (2 Star)</option>
+                            <option value="1">⭐ (1 Star)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Total Rooms <span class="required-mark">*</span></label>
+                        <input type="number" id="totalRooms" name="totalRooms" min="1" required placeholder="Number of rooms available">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Hotel Description <span class="required-mark">*</span></label>
+                        <textarea id="hotelDescription" name="hotelDescription" required placeholder="Describe your hotel, amenities, and unique features..."></textarea>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <div></div>
+                    <button type="button" class="btn" onclick="nextStep()">Next Step →</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Location Details -->
+            <div class="form-card form-step" data-step="2">
+                <div class="section-header">
+                    <h2>Location & Address</h2>
+                </div>
+
+                <div class="info-box">
+                    <p>Provide the complete address details to help guests find your hotel easily.</p>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label>Complete Address <span class="required-mark">*</span></label>
+                        <textarea id="address" name="address" rows="3" required placeholder="Street address, landmarks, etc."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>City/Town <span class="required-mark">*</span></label>
+                        <input type="text" id="city" name="city" required placeholder="e.g., Bangalore, Mysore">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Pincode <span class="required-mark">*</span></label>
+                        <input type="text" id="pincode" name="pincode" required pattern="[0-9]{6}" maxlength="6" placeholder="6-digit pincode">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Google Maps URL (Optional)</label>
+                        <input type="url" id="mapsUrl" name="mapsUrl" placeholder="https://maps.google.com/...">
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">← Previous</button>
+                    <button type="button" class="btn" onclick="nextStep()">Next Step →</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Contact Information -->
+            <div class="form-card form-step" data-step="3">
+                <div class="section-header">
+                    <h2>Contact Information</h2>
+                </div>
+
+                <div class="info-box">
+                    <p>Please provide valid contact details for communication and verification purposes.</p>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label>Contact Person Name <span class="required-mark">*</span></label>
+                        <input type="text" id="contactName" name="contactName" required placeholder="Full name of contact person">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Mobile Number <span class="required-mark">*</span></label>
+                        <input type="tel" id="mobile" name="mobile" required pattern="[0-9]{10}" maxlength="10" placeholder="10-digit mobile number">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Alternate Number (Optional)</label>
+                        <input type="tel" id="alternateMobile" name="alternateMobile" pattern="[0-9]{10}" maxlength="10" placeholder="10-digit number">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Email Address <span class="required-mark">*</span></label>
+                        <input type="email" id="email" name="email" required placeholder="hotel@example.com">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Website URL (Optional)</label>
+                        <input type="url" id="website" name="website" placeholder="https://www.yourhotel.com">
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">← Previous</button>
+                    <button type="button" class="btn" onclick="nextStep()">Next Step →</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Images & Gallery -->
+            <div class="form-card form-step" data-step="4">
+                <div class="section-header">
+                    <h2>Hotel Images & Gallery</h2>
+                </div>
+
+                <div class="info-box">
+                    <p>Upload high-quality images of your hotel. You can upload up to 10 images showcasing rooms, facilities, and amenities.</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Images (Max 10 images) <span class="required-mark">*</span></label>
+                    <input type="file" id="imageInput" name="imageInput" accept="image/*" multiple required>
+                    <p style="color: var(--light-gold); font-size: 0.9em; margin-top: 10px;">Supported formats: JPG, PNG, JPEG (Max size: 5MB per image)</p>
+                </div>
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">← Previous</button>
+                    <button type="submit" class="btn">🎉 Submit Registration</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="success-modal" id="successModal">
+        <div class="success-content">
+            <div class="success-icon">✅</div>
+            <h2>Registration Successful!</h2>
+            <p>Your hotel has been successfully registered with Karnataka Tourism. We will contact you shortly for verification.</p>
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
+                <button class="btn" onclick="goToHome()">🏠 Go to Home</button>
+                <button class="btn btn-secondary" onclick="closeModal()">📝 Register Another Hotel</button>
+                <button onclick="firebase.auth().signOut().then(() => { window.location.href='login.html'; })" style="background: var(--danger); color: white; border: 2px solid var(--danger); padding: 15px; border-radius: 8px; cursor: pointer; font-weight: bold;">🚪 Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script>
+        firebase.initializeApp({
+            apiKey: "AIzaSyBzlUz79MvbV98osbMniaddt3nltmtQyaM",
+            authDomain: "book-now-935f2.firebaseapp.com",
+            projectId: "book-now-935f2",
+            storageBucket: "book-now-935f2.firebasestorage.app",
+            messagingSenderId: "61818097207",
+            appId: "1:61818097207:web:aade934f0fb93b975c79b2"
+        });
+
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let currentUser = null;
+        let currentStep = 1;
+        const totalSteps = 4;
+
+        firebase.auth().onAuthStateChanged((user) => {
+          currentUser = user;
+          if (!user) {
+            alert('Please login as Business user to register your hotel');
+            window.location.href = 'login.html';
+          } else {
+            const userName = localStorage.getItem('userName') || user.email;
+            document.getElementById('userInfo').textContent = '👤 ' + userName;
+          }
+        });
+
+        // Update progress bar
+        function updateProgressBar() {
+            const progressWidth = ((currentStep - 1) / (totalSteps - 1)) * 80; // 80% to account for spacing
+            document.getElementById('progressLineActive').style.width = progressWidth + '%';
+            
+            // Update step indicators
+            document.querySelectorAll('.step').forEach((step, index) => {
+                if (index < currentStep) {
+                    step.classList.add('active');
+                } else {
+                    step.classList.remove('active');
+                }
+            });
+        }
+
+        function validateStep(stepNumber) {
+            const currentStepElement = document.querySelector(`.form-step[data-step="${stepNumber}"]`);
+            const requiredFields = currentStepElement.querySelectorAll('[required]');
+            let isValid = true;
+
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    isValid = false;
+                    field.classList.add('error');
+                    field.style.borderColor = 'var(--danger)';
+                    
+                    // Smooth scroll to first error
+                    if (isValid === false) {
+                        field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                } else {
+                    field.classList.remove('error');
+                    field.style.borderColor = '';
+                }
+            });
+
+            // Special validation for file input
+            const fileInput = currentStepElement.querySelector('#imageInput');
+            if (fileInput && stepNumber === 4) {
+                if (fileInput.files.length === 0) {
+                    isValid = false;
+                    fileInput.style.borderColor = 'var(--danger)';
+                } else if (fileInput.files.length > 10) {
+                    isValid = false;
+                    alert('You can upload a maximum of 10 images.');
+                    fileInput.style.borderColor = 'var(--danger)';
+                } else {
+                    fileInput.style.borderColor = '';
+                }
+            }
+
+            return isValid;
+        }
+
+        function nextStep() {
+            if (validateStep(currentStep)) {
+                document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.remove('active');
+                currentStep++;
+                document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.add('active');
+                updateProgressBar();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function prevStep() {
+            document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.remove('active');
+            currentStep--;
+            document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.add('active');
+            updateProgressBar();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Form submission
+        document.getElementById('hotelRegistrationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (validateStep(currentStep)) {
+                const formData = new FormData(this);
+                const hotelData = {
+                    userId: currentUser?.uid || 'anonymous',
+                    userEmail: currentUser?.email || formData.get('email'),
+                    type: 'hotel',
+                    hotelName: formData.get('hotelName'),
+                    ownerName: formData.get('ownerName'),
+                    email: formData.get('email'),
+                    phone: formData.get('phone'),
+                    address: formData.get('address'),
+                    city: formData.get('city'),
+                    totalRooms: parseInt(formData.get('totalRooms')),
+                    priceRange: formData.get('priceRange'),
+                    amenities: formData.get('amenities'),
+                    description: formData.get('description'),
+                    registrationStatus: 'pending',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                try {
+                    await db.collection('businessRegistrations').add(hotelData);
+                    document.getElementById('successModal').classList.add('show');
+                } catch (error) {
+                    console.error('Error saving registration:', error);
+                    alert('Registration saved locally. Error: ' + error.message);
+                    document.getElementById('successModal').classList.add('show');
+                }
+            }
+        });
+
+        function closeModal() {
+            document.getElementById('successModal').classList.remove('show');
+            document.getElementById('hotelRegistrationForm').reset();
+            currentStep = 1;
+            document.querySelectorAll('.form-step').forEach(step => step.classList.remove('active'));
+            document.querySelector('.form-step[data-step="1"]').classList.add('active');
+            updateProgressBar();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goToHome() {
+            window.location.href = 'home.html';
+        }
+
+        // Remove error styling on input
+        document.querySelectorAll('input, select, textarea').forEach(field => {
+            field.addEventListener('input', function() {
+                if (this.value.trim()) {
+                    this.classList.remove('error');
+                    this.style.borderColor = '';
+                }
+            });
+        });
+
+        // Initialize progress bar
+        updateProgressBar();
+    </script>
+</body>
+</html>

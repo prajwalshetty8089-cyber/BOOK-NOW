@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tourism Partner Portal - Karnataka</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary-black: #000000;
+            --gold: #D4AF37;
+            --dark-gold: #B8941F;
+            --light-gold: #F4E4BC;
+            --white: #FFFFFF;
+            --gray: #333333;
+            --danger: #DC2626;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            color: var(--white);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; }
+
+        .header-banner {
+            background: linear-gradient(135deg, var(--primary-black) 0%, var(--gray) 100%);
+            border: 3px solid var(--gold);
+            border-radius: 15px;
+            padding: 50px 40px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.3);
+            margin-bottom: 40px;
+        }
+
+        .header-banner h1 {
+            font-size: 2.8em;
+            color: var(--gold);
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            letter-spacing: 1px;
+        }
+
+        .header-banner p {
+            color: var(--light-gold);
+            font-size: 1.3em;
+            font-style: italic;
+        }
+
+        .progress-container {
+            background: var(--primary-black);
+            border: 2px solid var(--gold);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .progress-line {
+            position: absolute;
+            top: 20px;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background: var(--gray);
+            z-index: 1;
+        }
+
+        .progress-line-active {
+            position: absolute;
+            top: 20px;
+            left: 10%;
+            height: 3px;
+            background: var(--gold);
+            z-index: 2;
+            transition: width 0.4s ease;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            position: relative;
+            z-index: 3;
+        }
+
+        .step-circle {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--gray);
+            border: 3px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-circle {
+            background: var(--gold);
+            color: var(--primary-black);
+            transform: scale(1.1);
+        }
+
+        .step-label { color: var(--light-gold); font-size: 0.9em; font-weight: 600; }
+        .step.active .step-label { color: var(--gold); }
+
+        .form-card {
+            background: var(--primary-black);
+            border: 2px solid var(--gold);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .form-step { display: none; animation: fadeIn 0.5s ease; }
+        .form-step.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .section-header h2 {
+            font-size: 2em;
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+
+        .form-group { margin-bottom: 0; }
+        .form-group.full-width { grid-column: 1 / -1; }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--light-gold);
+            font-weight: 600;
+            font-size: 1em;
+        }
+
+        .required-mark { color: var(--danger); margin-left: 3px; }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="url"],
+        input[type="number"],
+        input[type="file"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--gold);
+            border-radius: 8px;
+            font-size: 1em;
+            color: var(--white);
+            background: var(--gray);
+            transition: all 0.3s ease;
+            font-family: 'Georgia', 'Times New Roman', serif;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--light-gold);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+            background: #404040;
+        }
+
+        textarea { min-height: 100px; resize: vertical; }
+        select option { background: var(--gray); }
+
+        .char-count {
+            text-align: right;
+            color: var(--light-gold);
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+
+        /* Activities */
+        .activity-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+
+        .activity-row input { flex: 1; }
+
+        .btn-remove-activity {
+            padding: 14px 18px;
+            background: var(--primary-black);
+            color: var(--gold);
+            border: 2px solid var(--gold);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            white-space: nowrap;
+        }
+
+        .btn-remove-activity:hover {
+            background: var(--danger);
+            border-color: var(--danger);
+            color: var(--white);
+        }
+
+        .btn-add-activity {
+            padding: 12px 24px;
+            background: var(--primary-black);
+            color: var(--gold);
+            border: 2px solid var(--gold);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            margin-top: 5px;
+            font-family: 'Georgia', 'Times New Roman', serif;
+        }
+
+        .btn-add-activity:hover {
+            background: var(--gold);
+            color: var(--primary-black);
+        }
+
+        /* File Upload */
+        .file-upload-area {
+            border: 2px dashed var(--gold);
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--gray);
+        }
+
+        .file-upload-area:hover {
+            background: #404040;
+            border-color: var(--light-gold);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+        }
+
+        .file-upload-area input[type="file"] { display: none; }
+        .file-upload-area p { color: var(--light-gold); font-style: italic; }
+        .file-upload-area .upload-icon { font-size: 2.5em; margin-bottom: 10px; }
+
+        .image-preview-info {
+            margin-top: 10px;
+            color: var(--gold);
+            font-size: 0.95em;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: space-between;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            border: 2px solid var(--gold);
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--gold);
+            color: var(--primary-black);
+            font-family: 'Georgia', 'Times New Roman', serif;
+        }
+
+        .btn:hover {
+            background: var(--dark-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--primary-black);
+            color: var(--gold);
+        }
+
+        .btn-secondary:hover { background: var(--gray); }
+
+        .info-box {
+            background: rgba(212, 175, 55, 0.1);
+            border-left: 4px solid var(--gold);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .info-box p {
+            color: var(--light-gold);
+            line-height: 1.6;
+            margin: 0;
+            font-style: italic;
+        }
+
+        input.error, select.error, textarea.error { border-color: var(--danger); }
+
+        /* Success Modal */
+        .success-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .success-modal.show { display: flex; animation: fadeIn 0.3s ease; }
+
+        .success-content {
+            background: var(--primary-black);
+            border: 3px solid var(--gold);
+            border-radius: 20px;
+            padding: 60px;
+            text-align: center;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(212, 175, 55, 0.5);
+        }
+
+        .success-content h2 { color: var(--gold); margin-bottom: 20px; font-size: 2.5em; }
+        .success-content p { color: var(--light-gold); font-size: 1.2em; margin-bottom: 30px; }
+
+        .success-icon {
+            font-size: 6em;
+            color: var(--gold);
+            margin-bottom: 20px;
+            animation: scaleIn 0.5s ease;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+
+        @media (max-width: 768px) {
+            .header-banner h1 { font-size: 2em; }
+            .form-grid { grid-template-columns: 1fr; }
+            .btn-group { flex-direction: column; }
+            .step-label { font-size: 0.75em; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+        <div></div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <span id="userInfo" style="color: var(--gold); font-size: 0.9rem;"></span>
+            <button onclick="window.location.href='home.html'" style="background: var(--primary-black); color: var(--gold); border: 2px solid var(--gold); padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; font-family: 'Georgia', serif;">🏠 Home</button>
+            <button onclick="firebase.auth().signOut().then(() => { window.location.href='login.html'; })" style="background: var(--primary-black); color: #ff6b6b; border: 2px solid #ff6b6b; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; font-family: 'Georgia', serif;">🚪 Logout</button>
+        </div>
+    </div>
+
+    <div class="header-banner">
+        <h1>🌍 Karnataka Tourism Partner Portal</h1>
+        <p>List Your Destination & Reach Thousands of Travellers</p>
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-steps">
+            <div class="progress-line"></div>
+            <div class="progress-line-active" id="progressLineActive"></div>
+            <div class="step active" data-step="1">
+                <div class="step-circle">1</div>
+                <span class="step-label">Basic Info</span>
+            </div>
+            <div class="step" data-step="2">
+                <div class="step-circle">2</div>
+                <span class="step-label">Place Details</span>
+            </div>
+            <div class="step" data-step="3">
+                <div class="step-circle">3</div>
+                <span class="step-label">Activities</span>
+            </div>
+            <div class="step" data-step="4">
+                <div class="step-circle">4</div>
+                <span class="step-label">Images & Contact</span>
+            </div>
+        </div>
+    </div>
+
+    <form id="tourismForm">
+
+        <!-- Step 1: Basic Information -->
+        <div class="form-card form-step active" data-step="1">
+            <div class="section-header">
+                <h2>Basic Information</h2>
+            </div>
+            <div class="info-box">
+                <p>Provide essential details about your tourism destination. All fields marked with * are mandatory.</p>
+            </div>
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label>Place Name <span class="required-mark">*</span></label>
+                    <input type="text" id="placeName" required placeholder="Enter the name of your tourism place">
+                </div>
+                <div class="form-group full-width">
+                    <label>Category <span class="required-mark">*</span></label>
+                    <select id="category" required>
+                        <option value="">Select a category</option>
+                        <option value="Hotel & Resort">Hotel & Resort</option>
+                        <option value="Adventure Park">Adventure Park</option>
+                        <option value="Museum & Gallery">Museum & Gallery</option>
+                        <option value="Nature & Wildlife">Nature & Wildlife</option>
+                        <option value="Historical Site">Historical Site</option>
+                        <option value="Beach & Coastal">Beach & Coastal</option>
+                        <option value="Mountain & Hiking">Mountain & Hiking</option>
+                        <option value="Restaurant & Dining">Restaurant & Dining</option>
+                        <option value="Entertainment">Entertainment</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>City <span class="required-mark">*</span></label>
+                    <input type="text" id="city" required placeholder="City">
+                </div>
+                <div class="form-group">
+                    <label>Country <span class="required-mark">*</span></label>
+                    <input type="text" id="country" required placeholder="Country" value="India">
+                </div>
+                <div class="form-group full-width">
+                    <label>Full Address <span class="required-mark">*</span></label>
+                    <input type="text" id="address" required placeholder="Complete address with landmarks">
+                </div>
+            </div>
+            <div class="btn-group">
+                <div></div>
+                <button type="button" class="btn" onclick="nextStep()">Next Step →</button>
+            </div>
+        </div>
+
+        <!-- Step 2: Place Details -->
+        <div class="form-card form-step" data-step="2">
+            <div class="section-header">
+                <h2>Place Details</h2>
+            </div>
+            <div class="info-box">
+                <p>Describe your place in detail to attract more visitors. Include what makes it special.</p>
+            </div>
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label>Description <span class="required-mark">*</span></label>
+                    <textarea id="description" required maxlength="1000" placeholder="Describe your tourism place in detail. Include history, highlights, and why visitors should choose it..."></textarea>
+                    <div class="char-count"><span id="descCount">0</span>/1000 characters</div>
+                </div>
+                <div class="form-group">
+                    <label>Opening Hours</label>
+                    <input type="text" id="openingHours" placeholder="e.g., 9:00 AM - 6:00 PM">
+                </div>
+                <div class="form-group">
+                    <label>Price Range</label>
+                    <input type="text" id="priceRange" placeholder="e.g., ₹500 - ₹2000">
+                </div>
+                <div class="form-group full-width">
+                    <label>Website URL</label>
+                    <input type="url" id="website" placeholder="https://yourwebsite.com">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-secondary" onclick="prevStep()">← Previous</button>
+                <button type="button" class="btn" onclick="nextStep()">Next Step →</button>
+            </div>
+        </div>
+
+        <!-- Step 3: Activities -->
+        <div class="form-card form-step" data-step="3">
+            <div class="section-header">
+                <h2>Activities & Amenities</h2>
+            </div>
+            <div class="info-box">
+                <p>List the activities, facilities, and amenities available at your destination.</p>
+            </div>
+            <div id="activitiesContainer">
+                <div class="activity-row">
+                    <input type="text" class="activity-input" placeholder="e.g., Guided Tours, Swimming Pool, Restaurant">
+                </div>
+            </div>
+            <button type="button" class="btn-add-activity" onclick="addActivity()">+ Add Activity / Amenity</button>
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-secondary" onclick="prevStep()">← Previous</button>
+                <button type="button" class="btn" onclick="nextStep()">Next Step →</button>
+            </div>
+        </div>
+
+        <!-- Step 4: Images & Contact -->
+        <div class="form-card form-step" data-step="4">
+            <div class="section-header">
+                <h2>Images & Contact Information</h2>
+            </div>
+            <div class="info-box">
+                <p>Upload high-quality images and provide accurate contact details for your listing.</p>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label>Upload Images (Max 10 images)</label>
+                    <label class="file-upload-area">
+                        <input type="file" id="images" multiple accept="image/*" onchange="updateImagePreview(this)">
+                        <div class="upload-icon">📸</div>
+                        <p>Click to upload images of your destination</p>
+                        <small style="color:var(--light-gold);">Supported: JPG, PNG, JPEG (Max 10MB each)</small>
+                    </label>
+                    <div class="image-preview-info" id="imagePreviewInfo"></div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Business / Organisation Name <span class="required-mark">*</span></label>
+                    <input type="text" id="businessName" required placeholder="Your business or company name">
+                </div>
+                <div class="form-group full-width">
+                    <label>Contact Person <span class="required-mark">*</span></label>
+                    <input type="text" id="contactPerson" required placeholder="Full name of contact person">
+                </div>
+                <div class="form-group">
+                    <label>Email Address <span class="required-mark">*</span></label>
+                    <input type="email" id="email" required placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Phone Number <span class="required-mark">*</span></label>
+                    <input type="tel" id="phone" required pattern="[0-9]{10}" maxlength="10" placeholder="10-digit mobile number">
+                </div>
+                <div class="form-group full-width">
+                    <label>Alternate Phone (Optional)</label>
+                    <input type="tel" id="altPhone" pattern="[0-9]{10}" maxlength="10" placeholder="10-digit number">
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-secondary" onclick="prevStep()">← Previous</button>
+                <button type="submit" class="btn">🎉 Submit for Review</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<!-- Success Modal -->
+<div class="success-modal" id="successModal">
+    <div class="success-content">
+        <div class="success-icon">✅</div>
+        <h2>Submission Successful!</h2>
+        <p>Your tourism destination has been submitted for review. We will contact you shortly for verification and listing approval.</p>
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
+            <button class="btn" onclick="goToHome()">🏠 Go to Home</button>
+            <button class="btn btn-secondary" onclick="closeModal()">🌍 Register Another Place</button>
+            <button onclick="firebase.auth().signOut().then(() => { window.location.href='login.html'; })" style="background: var(--danger); color: white; border: 2px solid var(--danger); padding: 15px; border-radius: 8px; cursor: pointer; font-weight: bold; font-family: 'Georgia', serif;">🚪 Logout</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script>
+    firebase.initializeApp({
+        apiKey: "AIzaSyBzlUz79MvbV98osbMniaddt3nltmtQyaM",
+        authDomain: "book-now-935f2.firebaseapp.com",
+        projectId: "book-now-935f2",
+        storageBucket: "book-now-935f2.firebasestorage.app",
+        messagingSenderId: "61818097207",
+        appId: "1:61818097207:web:aade934f0fb93b975c79b2"
+    });
+
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    let currentUser = null;
+    let currentStep = 1;
+    const totalSteps = 4;
+
+    firebase.auth().onAuthStateChanged((user) => {
+      currentUser = user;
+      if (!user) {
+        alert('Please login as Business user to register tourism places');
+        window.location.href = 'login.html';
+      } else {
+        const userName = localStorage.getItem('userName') || user.email;
+        document.getElementById('userInfo').textContent = '👤 ' + userName;
+      }
+    });
+
+    function updateProgressBar() {
+        const progressWidth = ((currentStep - 1) / (totalSteps - 1)) * 80;
+        document.getElementById('progressLineActive').style.width = progressWidth + '%';
+        document.querySelectorAll('.step').forEach((step, index) => {
+            if (index < currentStep) step.classList.add('active');
+            else step.classList.remove('active');
+        });
+    }
+
+    function validateStep(stepNumber) {
+        const currentEl = document.querySelector(`.form-step[data-step="${stepNumber}"]`);
+        const required = currentEl.querySelectorAll('[required]');
+        let isValid = true;
+        let firstError = null;
+        required.forEach(field => {
+            if (!field.value.trim()) {
+                isValid = false;
+                field.classList.add('error');
+                field.style.borderColor = 'var(--danger)';
+                if (!firstError) firstError = field;
+            } else {
+                field.classList.remove('error');
+                field.style.borderColor = '';
+            }
+        });
+        if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return isValid;
+    }
+
+    function nextStep() {
+        if (validateStep(currentStep)) {
+            document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.remove('active');
+            currentStep++;
+            document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.add('active');
+            updateProgressBar();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+
+    function prevStep() {
+        document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.remove('active');
+        currentStep--;
+        document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.add('active');
+        updateProgressBar();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function addActivity() {
+        const container = document.getElementById('activitiesContainer');
+        const row = document.createElement('div');
+        row.className = 'activity-row';
+        row.innerHTML = `
+            <input type="text" class="activity-input" placeholder="e.g., Guided Tours, Swimming Pool, Restaurant">
+            <button type="button" class="btn-remove-activity" onclick="this.parentElement.remove()">✕ Remove</button>
+        `;
+        container.appendChild(row);
+        row.querySelector('input').focus();
+    }
+
+    function updateImagePreview(input) {
+        const info = document.getElementById('imagePreviewInfo');
+        if (input.files.length > 10) {
+            info.innerHTML = `<span style="color:var(--danger)">⚠ Maximum 10 images allowed. Please select fewer images.</span>`;
+            input.value = '';
+            return;
+        }
+        if (input.files.length > 0) {
+            info.innerHTML = `✅ ${input.files.length} image(s) selected`;
+        } else {
+            info.innerHTML = '';
+        }
+    }
+
+    // Character counter
+    document.getElementById('description').addEventListener('input', function() {
+        document.getElementById('descCount').textContent = this.value.length;
+        if (this.value.trim()) {
+            this.classList.remove('error');
+            this.style.borderColor = '';
+        }
+    });
+
+    // Remove error styling on input
+    document.querySelectorAll('input, select, textarea').forEach(field => {
+        field.addEventListener('input', function() {
+            if (this.value.trim()) {
+                this.classList.remove('error');
+                this.style.borderColor = '';
+            }
+        });
+    });
+
+    document.getElementById('tourismForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        if (!validateStep(currentStep)) return;
+
+        const activities = [];
+        document.querySelectorAll('.activity-input').forEach(input => {
+            if (input.value.trim()) activities.push(input.value.trim());
+        });
+
+        const formData = {
+            userId: currentUser?.uid || 'anonymous',
+            userEmail: currentUser?.email || document.getElementById('email').value,
+            type: 'tourism',
+            placeName: document.getElementById('placeName').value,
+            category: document.getElementById('category').value,
+            city: document.getElementById('city').value,
+            country: document.getElementById('country').value,
+            address: document.getElementById('address').value,
+            description: document.getElementById('description').value,
+            openingHours: document.getElementById('openingHours').value,
+            priceRange: document.getElementById('priceRange').value,
+            website: document.getElementById('website').value,
+            activities: activities,
+            businessName: document.getElementById('businessName').value,
+            contactPerson: document.getElementById('contactPerson').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            altPhone: document.getElementById('altPhone').value,
+            registrationStatus: 'pending',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        try {
+            await db.collection('businessRegistrations').add(formData);
+            document.getElementById('successModal').classList.add('show');
+        } catch (error) {
+            console.error('Error saving:', error);
+            alert('Registration saved. Error: ' + error.message);
+            document.getElementById('successModal').classList.add('show');
+        }
+    });
+
+    function closeModal() {
+        document.getElementById('successModal').classList.remove('show');
+        document.getElementById('tourismForm').reset();
+        document.getElementById('activitiesContainer').innerHTML = `
+            <div class="activity-row">
+                <input type="text" class="activity-input" placeholder="e.g., Guided Tours, Swimming Pool, Restaurant">
+            </div>
+        `;
+        document.getElementById('imagePreviewInfo').innerHTML = '';
+        document.getElementById('descCount').textContent = '0';
+        currentStep = 1;
+        document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+        document.querySelector('.form-step[data-step="1"]').classList.add('active');
+        updateProgressBar();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function goToHome() {
+        window.location.href = 'home.html';
+    }
+
+    updateProgressBar();
+</script>
+</body>
+</html>
